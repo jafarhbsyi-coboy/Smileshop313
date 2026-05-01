@@ -4,7 +4,7 @@ Adalah wadah bagi jual beli dari seluruh Indonesia hingga ke luar negeri.
 
 kami akan melayani dengan sepenuh hati pemesanan barang barang / jasa bagi Anda para pelanggan kami di Smileshop313.
 
-Untuk Pembayaran atau Donasi silahkan hubungi kami Di :
+Untuk Pembayaran atau Donasi,Bisa COD atau, silahkan hubungi kami Di :
 ## 💰 Donasi / Pembayaran
 
 Silakan transfer ke rekening berikut:
