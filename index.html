@@ -7,31 +7,62 @@
         body {
             font-family: Arial;
             background: #f5f5f5;
-            text-align: center;
+            margin: 0;
         }
-        h1 {
+        header {
+            background: orange;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .produk {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 300px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .produk img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .harga {
             color: orange;
+            font-size: 18px;
+            margin: 10px 0;
         }
         .btn {
             display: inline-block;
-            padding: 15px 25px;
-            background: orange;
+            padding: 12px 20px;
+            background: #ee4d2d;
             color: white;
             text-decoration: none;
-            border-radius: 10px;
-            font-size: 18px;
-            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <h1>Selamat Datang di Smileshop313</h1>
-    <p>Klik tombol di bawah untuk belanja di Shopee kami</p>
+<header>
+    🛍️ Smileshop313
+</header>
 
-    <a href="https://shopee.co.id/Smileshop313" class="btn" target="_blank">
-        🛒 Kunjungi Toko Shopee
-    </a>
+<div class="container">
+    <div class="produk">
+        <img src="https://via.placeholder.com/300" alt="Produk">
+        <h3>Produk Keren</h3>
+        <p class="harga">Rp 99.000</p>
+
+        <a href="https://shopee.co.id/Smileshop313" target="_blank" class="btn">
+            Beli di Shopee
+        </a>
+    </div>
+</div>
 
 </body>
 </html>
