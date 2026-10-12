@@ -1,76 +1,572 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Smileshop313 - Jual Beli Online yang Amanah</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f5f5f5;
-      margin: 0;
-    }
-    header {
-      background: #2ecc71;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-    }
-    .container {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    .price {
-      color: green;
-      font-weight: bold;
-    }
-    .btn {
-      display: block;
-      text-align: center;
-      background: #25D366;
-      color: white;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasir Jualan Ja'far</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f4f3;
+    color: #222;
+}
+
+header {
+    background: #087f5b;
+    color: white;
+    padding: 20px 14px;
+    text-align: center;
+}
+
+header h2 { margin: 0 0 6px; }
+header p { margin: 0; }
+
+nav {
+    display: flex;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+nav button {
+    flex: 1;
+    border: 0;
+    padding: 13px 3px;
+    background: white;
+    font-weight: bold;
+    color: #087f5b;
+}
+
+nav button.active {
+    background: #d8f3e8;
+    border-bottom: 3px solid #087f5b;
+}
+
+main { padding: 14px; }
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 7px #0000000d;
+}
+
+h3 { margin-top: 0; }
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccd5d1;
+    border-radius: 7px;
+    font-size: 16px;
+}
+
+button.action {
+    padding: 10px 13px;
+    margin: 3px 2px 3px 0;
+    border: 0;
+    border-radius: 7px;
+    background: #087f5b;
+    color: white;
+    font-weight: bold;
+}
+
+button.danger { background: #d63333; }
+button.secondary { background: #52616b; }
+button:disabled { opacity: .5; }
+
+.product {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.product:last-child { border-bottom: 0; }
+
+.price { color: #087f5b; font-weight: bold; }
+
+.total {
+    font-size: 22px;
+    font-weight: bold;
+    color: #087f5b;
+}
+
+.hidden { display: none; }
+
+.small { color: #666; font-size: 13px; }
+
+footer {
+    text-align: center;
+    padding: 18px;
+    color: #666;
+    font-size: 12px;
+}
+</style>
 </head>
+
 <body>
 
-Smileshop313 - Jual Beli Online, by.jafarhabsyi</header>
+<header>
+    <h2>KASIR JUALAN JA'FAR</h2>
+    <p>Aplikasi Kasir Warung Sederhana</p>
+</header>
 
-<div class="container">
+<nav>
+    <button class="active" onclick="bukaTab('kasir',this)">Kasir</button>
+    <button onclick="bukaTab('barang',this)">Barang</button>
+    <button onclick="bukaTab('riwayat',this)">Riwayat</button>
+</nav>
 
-  <div class="card">
-    <img src="https://via.placeholder.com/200">
-    <h3>Sepatu Sneakers</h3>
-    <p class="price">Rp 250.000</p>
-    <p>Sepatu keren dan nyaman</p>
-    <a class="btn" href="https://wa.me/6282299357141?text=Saya mau beli Sepatu Sneakers">Beli via WhatsApp</a>
-  </div>
+<main>
 
-  <div class="card">
-    <img src="https://via.placeholder.com/200">
-    <h3>Jam Tangan Pria</h3>
-    <p class="price">Rp 150.000</p>
-    <p>Elegan & stylish</p>
-    <a class="btn" href="https://wa.me/6282299357141?text=Saya mau beli Jam Tangan">Beli via WhatsApp</a>
-  </div>
+<section id="kasir">
+    <div class="card">
+        <h3>Daftar Barang</h3>
+        <input id="cari" placeholder="Cari nama barang..."
+               oninput="tampilKasir()">
+        <div id="daftarKasir"></div>
+    </div>
 
-</div>
+    <div class="card">
+        <h3>Keranjang Belanja</h3>
+        <div id="keranjang"></div>
+        <p>Total Belanja</p>
+        <div class="total" id="total">Rp0</div>
+
+        <label for="bayar">Uang Dibayar (Rp)</label>
+        <input id="bayar" type="number" min="0"
+               inputmode="numeric" placeholder="Masukkan uang pembayaran"
+               oninput="hitungKembalian()">
+
+        <p>Kembalian: <strong id="kembalian">Rp0</strong></p>
+        <button class="action" style="width:100%;padding:14px"
+                onclick="prosesTransaksi()">PROSES TRANSAKSI</button>
+        <button class="action secondary" onclick="kosongkanKeranjang()">
+            Kosongkan Keranjang
+        </button>
+    </div>
+</section>
+
+<section id="barang" class="hidden">
+    <div class="card">
+        <h3 id="judulForm">Tambah Barang</h3>
+        <form id="formBarang" onsubmit="simpanBarang(event)">
+            <input id="nama" placeholder="Nama barang" required>
+            <input id="harga" type="number" min="1"
+                   inputmode="numeric" placeholder="Harga barang (Rp)"
+                   required>
+            <input id="stok" type="number" min="0"
+                   inputmode="numeric" placeholder="Stok barang"
+                   required>
+            <button class="action" type="submit">Simpan Barang</button>
+            <button class="action secondary" type="button"
+                    onclick="resetForm()">Batal Edit</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Data Barang</h3>
+        <div id="daftarBarang"></div>
+    </div>
+</section>
+
+<section id="riwayat" class="hidden">
+    <div class="card">
+        <h3>Riwayat Transaksi</h3>
+        <div id="daftarRiwayat"></div>
+        <button class="action" onclick="eksporData()">
+            Unduh Cadangan Data
+        </button>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    Kasir Jualan Ja'far &copy; 2026
+    <br>Data tersimpan di browser perangkat ini.
+</footer>
+
+<script>
+const rupiah = angka =>
+    new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+    }).format(angka);
+
+function baca(key, awal) {
+    try {
+        const hasil = localStorage.getItem(key);
+        return hasil === null ? awal : JSON.parse(hasil);
+    } catch (e) {
+        return awal;
+    }
+}
+
+let barang = baca('jafar_barang', [
+    {id: 1, nama: 'Beras 1 kg', harga: 15000, stok: 20},
+    {id: 2, nama: 'Minyak Goreng', harga: 18000, stok: 15},
+    {id: 3, nama: 'Gula Pasir', harga: 16000, stok: 12}
+]);
+
+let riwayat = baca('jafar_riwayat', []);
+let keranjang = [];
+let editId = null;
+
+function simpanData() {
+    localStorage.setItem('jafar_barang', JSON.stringify(barang));
+    localStorage.setItem('jafar_riwayat', JSON.stringify(riwayat));
+}
+
+function bukaTab(id, tombol) {
+    document.querySelectorAll('main section').forEach(s =>
+        s.classList.add('hidden')
+    );
+    document.getElementById(id).classList.remove('hidden');
+
+    document.querySelectorAll('nav button').forEach(b =>
+        b.classList.remove('active')
+    );
+    tombol.classList.add('active');
+
+    if (id === 'barang') tampilBarang();
+    if (id === 'riwayat') tampilRiwayat();
+    if (id === 'kasir') {
+        tampilKasir();
+        tampilKeranjang();
+    }
+}
+
+function tampilKasir() {
+    const kata = document.getElementById('cari').value.toLowerCase();
+    const hasil = barang.filter(b =>
+        b.nama.toLowerCase().includes(kata)
+    );
+
+    document.getElementById('daftarKasir').innerHTML =
+        hasil.length ? hasil.map(b => `
+        <div class="product">
+            <strong>${aman(b.nama)}</strong><br>
+            <span class="price">${rupiah(b.harga)}</span>
+            <span class="small"> | Stok: ${b.stok}</span><br>
+            <button class="action" onclick="tambahKeranjang(${b.id})"
+                ${b.stok < 1 ? 'disabled' : ''}>+ Tambah</button>
+        </div>`).join('') : '<p>Barang tidak ditemukan.</p>';
+}
+
+function tambahKeranjang(id) {
+    const b = barang.find(x => x.id === id);
+    if (!b || b.stok < 1) {
+        alert('Stok barang habis.');
+        return;
+    }
+
+    const item = keranjang.find(x => x.id === id);
+    if (item) {
+        if (item.jumlah >= b.stok) {
+            alert('Jumlah melebihi stok.');
+            return;
+        }
+        item.jumlah++;
+    } else {
+        keranjang.push({
+            id: b.id,
+            nama: b.nama,
+            harga: b.harga,
+            jumlah: 1
+        });
+    }
+
+    tampilKeranjang();
+}
+
+function ubahJumlah(id, perubahan) {
+    const item = keranjang.find(x => x.id === id);
+    const b = barang.find(x => x.id === id);
+    if (!item || !b) return;
+
+    const jumlahBaru = item.jumlah + perubahan;
+    if (jumlahBaru > b.stok) {
+        alert('Jumlah melebihi stok.');
+        return;
+    }
+
+    if (jumlahBaru <= 0) {
+        keranjang = keranjang.filter(x => x.id !== id);
+    } else {
+        item.jumlah = jumlahBaru;
+    }
+    tampilKeranjang();
+}
+
+function totalBelanja() {
+    return keranjang.reduce((sum, x) => sum + x.harga * x.jumlah, 0);
+}
+
+function tampilKeranjang() {
+    const el = document.getElementById('keranjang');
+
+    el.innerHTML = keranjang.length ? keranjang.map(x => `
+        <div class="product">
+            <strong>${aman(x.nama)}</strong><br>
+            ${rupiah(x.harga)} × ${x.jumlah}
+            = <strong>${rupiah(x.harga * x.jumlah)}</strong><br>
+            <button class="action" onclick="ubahJumlah(${x.id},-1)">−</button>
+            <button class="action" onclick="ubahJumlah(${x.id},1)">+</button>
+            <button class="action danger"
+                    onclick="hapusKeranjang(${x.id})">Hapus</button>
+        </div>`).join('') : '<p>Keranjang masih kosong.</p>';
+
+    document.getElementById('total').textContent =
+        rupiah(totalBelanja());
+    hitungKembalian();
+}
+
+function hapusKeranjang(id) {
+    keranjang = keranjang.filter(x => x.id !== id);
+    tampilKeranjang();
+}
+
+function kosongkanKeranjang() {
+    if (keranjang.length && !confirm('Kosongkan keranjang?')) return;
+    keranjang = [];
+    document.getElementById('bayar').value = '';
+    tampilKeranjang();
+}
+
+function hitungKembalian() {
+    const bayar = Number(document.getElementById('bayar').value) || 0;
+    const selisih = bayar - totalBelanja();
+
+    document.getElementById('kembalian').textContent =
+        rupiah(Math.max(0, selisih));
+
+    document.getElementById('kembalian').style.color =
+        selisih < 0 ? '#d63333' : '#087f5b';
+}
+
+function prosesTransaksi() {
+    const total = totalBelanja();
+    const bayar = Number(document.getElementById('bayar').value);
+
+    if (!keranjang.length) {
+        alert('Keranjang masih kosong.');
+        return;
+    }
+
+    if (!Number.isFinite(bayar) || bayar < total) {
+        alert('Uang pembayaran belum cukup.');
+        return;
+    }
+
+    for (const item of keranjang) {
+        const b = barang.find(x => x.id === item.id);
+        if (!b || b.stok < item.jumlah) {
+            alert('Stok ' + item.nama + ' berubah. Periksa keranjang.');
+            return;
+        }
+    }
+
+    const transaksi = {
+        id: Date.now(),
+        tanggal: new Date().toLocaleString('id-ID'),
+        barang: keranjang.map(x => ({...x})),
+        total: total,
+        bayar: bayar,
+        kembalian: bayar - total
+    };
+
+    barang.forEach(b => {
+        const item = keranjang.find(x => x.id === b.id);
+        if (item) b.stok -= item.jumlah;
+    });
+
+    riwayat.unshift(transaksi);
+    simpanData();
+
+    let struk = "KASIR JUALAN JA'FAR\n";
+    struk += transaksi.tanggal + '\n';
+    struk += '----------------------\n';
+    transaksi.barang.forEach(x => {
+        struk += `${x.nama} x${x.jumlah} = ${rupiah(x.harga*x.jumlah)}\n`;
+    });
+    struk += '----------------------\n';
+    struk += 'Total: ' + rupiah(total) + '\n';
+    struk += 'Bayar: ' + rupiah(bayar) + '\n';
+    struk += 'Kembali: ' + rupiah(bayar-total) + '\n';
+    struk += 'Terima kasih!';
+
+    keranjang = [];
+    document.getElementById('bayar').value = '';
+    tampilKeranjang();
+    tampilKasir();
+
+    alert('Transaksi berhasil disimpan!\n\n' + struk);
+}
+
+function simpanBarang(e) {
+    e.preventDefault();
+
+    const nama = document.getElementById('nama').value.trim();
+    const harga = Number(document.getElementById('harga').value);
+    const stok = Number(document.getElementById('stok').value);
+
+    if (!nama || !Number.isSafeInteger(harga) || harga <= 0 ||
+        !Number.isSafeInteger(stok) || stok < 0) {
+        alert('Periksa nama, harga, dan stok barang.');
+        return;
+    }
+
+    if (editId !== null) {
+        const b = barang.find(x => x.id === editId);
+        if (b) {
+            b.nama = nama;
+            b.harga = harga;
+            b.stok = stok;
+        }
+    } else {
+        barang.push({
+            id: Date.now(),
+            nama: nama,
+            harga: harga,
+            stok: stok
+        });
+    }
+
+    simpanData();
+    resetForm();
+    tampilBarang();
+    tampilKasir();
+    alert('Data barang berhasil disimpan.');
+}
+
+function editBarang(id) {
+    const b = barang.find(x => x.id === id);
+    if (!b) return;
+
+    editId = id;
+    document.getElementById('nama').value = b.nama;
+    document.getElementById('harga').value = b.harga;
+    document.getElementById('stok').value = b.stok;
+    document.getElementById('judulForm').textContent = 'Edit Barang';
+    window.scrollTo(0, 0);
+}
+
+function hapusBarang(id) {
+    if (keranjang.some(x => x.id === id)) {
+        alert('Hapus barang dari keranjang terlebih dahulu.');
+        return;
+    }
+
+    const b = barang.find(x => x.id === id);
+    if (!b || !confirm('Hapus barang ' + b.nama + '?')) return;
+
+    barang = barang.filter(x => x.id !== id);
+    simpanData();
+    tampilBarang();
+    tampilKasir();
+}
+
+function resetForm() {
+    editId = null;
+    document.getElementById('formBarang').reset();
+    document.getElementById('judulForm').textContent = 'Tambah Barang';
+}
+
+function tampilBarang() {
+    const el = document.getElementById('daftarBarang');
+
+    el.innerHTML = barang.length ? barang.map(b => `
+        <div class="product">
+            <strong>${aman(b.nama)}</strong><br>
+            ${rupiah(b.harga)} | Stok: ${b.stok}<br>
+            <button class="action" onclick="editBarang(${b.id})">Edit</button>
+            <button class="action danger"
+                    onclick="hapusBarang(${b.id})">Hapus</button>
+        </div>`).join('') : '<p>Belum ada barang.</p>';
+}
+
+function tampilRiwayat() {
+    const el = document.getElementById('daftarRiwayat');
+
+    el.innerHTML = riwayat.length ? riwayat.map(t => `
+        <div class="product">
+            <strong>Transaksi #${t.id}</strong><br>
+            <span class="small">${aman(t.tanggal)}</span><br>
+            ${t.barang.map(x =>
+                `${aman(x.nama)} × ${x.jumlah}`
+            ).join('<br>')}<br>
+            Total: <strong>${rupiah(t.total)}</strong><br>
+            Bayar: ${rupiah(t.bayar)}<br>
+            Kembalian: ${rupiah(t.kembalian)}<br>
+            <button class="action" onclick="bagikanStruk(${t.id})">
+                Bagikan Struk
+            </button>
+        </div>`).join('') : '<p>Belum ada transaksi.</p>';
+}
+
+function bagikanStruk(id) {
+    const t = riwayat.find(x => x.id === id);
+    if (!t) return;
+
+    let teks = "KASIR JUALAN JA'FAR\n" + t.tanggal + '\n';
+    t.barang.forEach(x => {
+        teks += `${x.nama} x${x.jumlah}: ${rupiah(x.harga*x.jumlah)}\n`;
+    });
+    teks += `Total: ${rupiah(t.total)}\n`;
+    teks += `Bayar: ${rupiah(t.bayar)}\n`;
+    teks += `Kembalian: ${rupiah(t.kembalian)}\nTerima kasih!`;
+
+    if (navigator.share) {
+        navigator.share({title: 'Struk Kasir Ja’far', text: teks})
+            .catch(() => {});
+    } else {
+        prompt('Salin teks struk berikut:', teks);
+    }
+}
+
+function eksporData() {
+    const data = {
+        barang: barang,
+        riwayat: riwayat,
+        tanggalCadangan: new Date().toISOString()
+    };
+
+    const file = new Blob(
+        [JSON.stringify(data, null, 2)],
+        {type: 'application/json'}
+    );
+
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cadangan_kasir_jafar.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function aman(teks) {
+    return String(teks).replace(/[&<>"']/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[c]);
+}
+
+tampilKasir();
+tampilBarang();
+tampilKeranjang();
+</script>
 
 </body>
 </html>
